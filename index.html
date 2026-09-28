@@ -123,6 +123,17 @@ textarea:focus{outline:2px solid var(--pinksoft)}
 .btn:active{transform:scale(.98)}
 .foot{text-align:center; color:var(--dim); font-size:12.5px; font-weight:600; margin-top:18px; line-height:1.9}
 .foot a{color:var(--pink2); font-weight:800; text-decoration:none}
+.hrowtop{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.snd{border:1px solid var(--line);background:var(--card2);border-radius:12px;padding:7px 13px;font-size:15px;font-weight:800;color:var(--ink);cursor:pointer;min-height:42px}
+.sum{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.sum .b{flex:1;min-width:88px;background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:10px 8px;text-align:center}
+.sum .b b{display:block;font-size:20px;font-weight:800;color:var(--pink2)}
+.sum .b span{font-size:12px;color:var(--dim);font-weight:700}
+.pd-row{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;padding:6px 2px}
+.pd-row .rd{flex:0 0 78px;color:var(--ink)}
+.pd-row .rb{flex:1;height:10px;background:#F6E9EE;border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+.pd-row .rb>i{display:block;height:100%;background:linear-gradient(90deg,#F9C6D2,#F48CA4)}
+.pd-row .rv{flex:0 0 70px;text-align:right;color:var(--dim);font-size:12px}
 
 /* ===== toast ===== */
 #toast{position:fixed; left:50%; bottom:calc(24px + env(safe-area-inset-bottom)); transform:translateX(-50%) translateY(14px);
@@ -136,7 +147,7 @@ textarea:focus{outline:2px solid var(--pinksoft)}
 
   <!-- 顶部 -->
   <div class="head">
-    <h1>🌷 婉欣的学习打卡</h1>
+    <div class="hrowtop"><h1>🌷 婉欣的学习打卡</h1><button class="snd" id="sndBtn">🔔</button></div>
     <div class="date" id="dateLine">—</div>
     <div class="pbar"><i id="pbar"></i></div>
     <div class="ptxt"><span>今日完成进度</span><span><b id="pct">0%</b> · <span id="cnt">0/0</span></span></div>
@@ -180,6 +191,13 @@ textarea:focus{outline:2px solid var(--pinksoft)}
   <h2>📒 历史打卡记录</h2>
   <div class="card" id="histCard"></div>
 
+  <!-- 家长查看 / 周报 -->
+  <h2>👨‍👩‍👧 家长查看 · 本周报告</h2>
+  <div class="card">
+    <button class="btn ghost" id="btnParent" style="width:100%">📊 查看本周报告</button>
+    <div id="parentBox" style="display:none;margin-top:10px"></div>
+  </div>
+
   <!-- 复盘 -->
   <h2>📝 今日复盘</h2>
   <div class="card">
@@ -196,7 +214,7 @@ textarea:focus{outline:2px solid var(--pinksoft)}
     数据只保存在这台设备的浏览器里，不会上传联网。<br>
     <a href="javascript:void(0)" id="btnExport">导出备份</a> · <a href="javascript:void(0)" id="btnImport">恢复备份</a>
     <input type="file" id="fileImport" accept="application/json,.json" style="display:none">
-    <div id="verLine" style="margin-top:6px">婉欣学习打卡 v1</div>
+    <div id="verLine" style="margin-top:6px">婉欣学习打卡 v2</div>
   </div>
 </div>
 <div id="toast"></div>
@@ -268,12 +286,29 @@ function niceDate(d){ return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getD
 function esc(s){ return (s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function toast(t){ const w=$('toast'); w.textContent=t; w.classList.add('show');
   clearTimeout(w._t); w._t=setTimeout(()=>w.classList.remove('show'),1900); }
+function nowHM(){ const d=new Date(); return pad(d.getHours())+':'+pad(d.getMinutes()); }
+/* 马里奥吃金币音效（WebAudio 方波 987→1318Hz），纯本地无外部音频 */
+let actx=null;
+function playCoin(){ if(state && state.sound===false) return; try{
+  actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+  const a=actx; if(a.state==='suspended' && a.resume) a.resume();
+  const t0=a.currentTime;
+  [[987.77,0,0.09],[1318.51,0.085,0.38]].forEach(function(p){
+    const o=a.createOscillator(), g=a.createGain();
+    o.type='square'; o.frequency.value=p[0]; o.connect(g); g.connect(a.destination);
+    const s=t0+p[1];
+    g.gain.setValueAtTime(.0001,s);
+    g.gain.exponentialRampToValueAtTime(.28,s+.012);
+    g.gain.exponentialRampToValueAtTime(.0001,s+p[2]);
+    o.start(s); o.stop(s+p[2]+.03);
+  });
+ }catch(e){} }
 
 /* ---------- 状态 ---------- */
 let state = null;
 function defState(){
   return { v:1, today:todayStr(),
-    done:{}, awarded:{}, allBonus:false, todayEarned:0,
+    done:{}, awarded:{}, allBonus:false, allDoneAt:'', todayEarned:0, sound:true,
     points:0, peak:0,          // points=可用积分(可花)  peak=总积分(累计，决定等级)
     pet:{ happiness:0, acc:'' },
     log:[], history:{}, reflect:'' };
@@ -286,6 +321,8 @@ function load(){
   state.pet = Object.assign({happiness:0,acc:''}, state.pet||{});
   if(typeof state.points!=='number') state.points=0;
   if(typeof state.peak!=='number') state.peak=state.points||0;
+  if(typeof state.allDoneAt!=='string') state.allDoneAt='';
+  if(typeof state.sound!=='boolean') state.sound=true;
   rollover();
   save();
 }
@@ -297,11 +334,11 @@ function rollover(){
     if(doneIds.length || (state.reflect||'').trim()){
       state.history[state.today] = {
         done: doneIds, pct: Math.round(doneIds.length/TOTAL*100),
-        earned: state.todayEarned||0, reflect: (state.reflect||'').trim()
+        earned: state.todayEarned||0, reflect: (state.reflect||'').trim(), allDoneAt: state.allDoneAt||''
       };
     }
     state.today = t; state.done={}; state.awarded={};
-    state.allBonus=false; state.todayEarned=0; state.reflect='';
+    state.allBonus=false; state.allDoneAt=''; state.todayEarned=0; state.reflect='';
   }
 }
 
@@ -320,9 +357,10 @@ function toggleTask(id){
   if(state.done[id]){ delete state.done[id]; }              // 取消勾选：不退分，防止刷分
   else{
     state.done[id] = true;
+    playCoin();                                             // 每次打卡：马里奥吃金币声
     if(!state.awarded[id]){ state.awarded[id]=true; earn(PTS_PER, '完成：'+nameOf(id)+' +'+PTS_PER); }
     const n = Object.keys(state.done).length;
-    if(n >= TOTAL && !state.allBonus){ state.allBonus=true; earn(BONUS_ALL, '今日全部完成，额外 +'+BONUS_ALL); toast('🎉 全部完成！额外 +'+BONUS_ALL+' 分'); }
+    if(n >= TOTAL && !state.allBonus){ state.allBonus=true; state.allDoneAt=nowHM(); earn(BONUS_ALL, '今日全部完成，额外 +'+BONUS_ALL); toast('🎉 全部完成！额外 +'+BONUS_ALL+' 分'); }
   }
   save(); render();
 }
@@ -355,10 +393,12 @@ function say(text, lang, key){
 function setReadBtn(key,on){ document.querySelectorAll('.rbtn[data-read="'+key+'"]').forEach(b=>b.classList.toggle('on',!!on)); }
 
 const POEMS = [
-  {t:'咏鹅', a:'骆宾王', x:'鹅，鹅，鹅，曲项向天歌。白毛浮绿水，红掌拨清波。'},
-  {t:'春晓', a:'孟浩然', x:'春眠不觉晓，处处闻啼鸟。夜来风雨声，花落知多少。'},
-  {t:'静夜思', a:'李白', x:'床前明月光，疑是地上霜。举头望明月，低头思故乡。'},
-  {t:'小池', a:'杨万里', x:'泉眼无声惜细流，树阴照水爱晴柔。小荷才露尖尖角，早有蜻蜓立上头。'}
+  {t:'咏鹅', a:'骆宾王', vol:'一上·日积月累', x:'鹅，鹅，鹅，曲项向天歌。白毛浮绿水，红掌拨清波。'},
+  {t:'江南', a:'汉乐府', vol:'一上·课文', x:'江南可采莲，莲叶何田田。鱼戏莲叶间。鱼戏莲叶东，鱼戏莲叶西，鱼戏莲叶南，鱼戏莲叶北。'},
+  {t:'画', a:'佚名', vol:'一上·课文', x:'远看山有色，近听水无声。春去花还在，人来鸟不惊。'},
+  {t:'悯农（其二）', a:'李绅', vol:'一上·日积月累', x:'锄禾日当午，汗滴禾下土。谁知盘中餐，粒粒皆辛苦。'},
+  {t:'古朗月行（节选）', a:'李白', vol:'一上·日积月累', x:'小时不识月，呼作白玉盘。又疑瑶台镜，飞在青云端。'},
+  {t:'风', a:'李峤', vol:'一上·日积月累', x:'解落三秋叶，能开二月花。过江千尺浪，入竹万竿斜。'}
 ];
 const PINYIN = [
   '请跟我读声母：玻 坡 摸 佛，得 特 讷 勒，哥 科 喝，鸡 七 西，知 吃 诗 日，资 次 思，衣 乌。',
@@ -368,6 +408,7 @@ const PINYIN = [
 ];
 const PHON = [['A','apple'],['B','ball'],['C','cat'],['D','dog'],['E','egg'],['F','fish'],['G','goat'],['H','hat'],['I','igloo'],['J','jam'],['K','kite'],['L','lion'],['M','moon'],['N','nest'],['O','orange'],['P','pig'],['Q','queen'],['R','rabbit'],['S','sun'],['T','tiger'],['U','umbrella'],['V','van'],['W','water'],['X','box'],['Y','yellow'],['Z','zebra']];
 let idx = {poem:0, pinyin:0, phonics:0};
+let shown = {poem:0, math:'', phon:''};
 
 function numCn(n){
   const d=['零','一','二','三','四','五','六','七','八','九'];
@@ -384,16 +425,17 @@ function genMath(){
   return {a,b,op,res};
 }
 function doRead(kind){
-  if(kind==='poem'){ const p=POEMS[idx.poem%POEMS.length]; idx.poem++;
-    say('《'+p.t+'》，'+p.a+'。'+p.x, 'zh-CN', 'poem'); toast('📖 '+p.t); }
+  if(kind==='poem'){ shown.poem=idx.poem%POEMS.length; const p=POEMS[shown.poem]; idx.poem++;
+    const el=document.getElementById('poemShow'); if(el) el.textContent='本题：'+p.vol+'《'+p.t+'》';
+    say('《'+p.t+'》，'+p.a+'。'+p.x, 'zh-CN', 'poem'); toast('📖 '+p.vol+'《'+p.t+'》'); }
   else if(kind==='pinyin'){ const t=PINYIN[idx.pinyin%PINYIN.length]; idx.pinyin++;
     say(t, 'zh-CN', 'pinyin'); toast('🅰️ 拼音练习'); }
-  else if(kind==='math'){ const m=genMath(); const prob = m.a+' '+m.op+' '+m.b+' = ?';
+  else if(kind==='math'){ const m=genMath(); const prob = m.a+' '+m.op+' '+m.b+' = ?'; shown.math=prob;
     const line = numCn(m.a)+' '+(m.op==='+'?'加':'减')+' '+numCn(m.b)+' 等于几？';
     const el=document.getElementById('mathShow'); if(el) el.textContent='本题：'+prob;
     say(line, 'zh-CN', 'math'); toast('🔢 '+prob+'（请作答）'); }
-  else if(kind==='phonics'){ const p=PHON[idx.phonics%PHON.length]; idx.phonics++;
-    const el=document.getElementById('phonShow'); if(el) el.textContent='本题：'+p[0]+' — '+p[1];
+  else if(kind==='phonics'){ const p=PHON[idx.phonics%PHON.length]; idx.phonics++; shown.phon=p[0]+' — '+p[1];
+    const el=document.getElementById('phonShow'); if(el) el.textContent='本题：'+shown.phon;
     say(p[0]+', '+p[1], 'en-US', 'phonics'); toast('🔤 '+p[0]+' — '+p[1]); }
 }
 
@@ -419,7 +461,10 @@ function render(){
   renderLog();
   renderHist();
   $('reflect').value = state.reflect || '';
+  const pb = $('parentBox'); if(pb && pb.style.display!=='none'){ pb.innerHTML = renderParent(); }
+  updateSndBtn();
 }
+function updateSndBtn(){ const b=$('sndBtn'); if(b) b.textContent = state.sound?'🔔':'🔕'; }
 
 function renderTime(now){
   const t = now.getHours()*60 + now.getMinutes();
@@ -441,12 +486,16 @@ function renderGroups(){
     g.tasks.forEach(tk=>{
       const done = isDone(tk.id);
       const badge = tk.pri ? '<span class="badge '+tk.pri+'">'+PRI_LABEL[tk.pri]+'</span>' : '';
+      const showId = tk.read==='math' ? ' id="mathShow"' : (tk.read==='phonics' ? ' id="phonShow"' : (tk.read==='poem' ? ' id="poemShow"' : ''));
+      let subText = '点右边 🔊 听一听';
+      if(tk.read==='math') subText = shown.math ? ('本题：'+shown.math) : subText;
+      else if(tk.read==='phonics') subText = shown.phon ? ('本题：'+shown.phon) : subText;
+      else if(tk.read==='poem'){ const p=POEMS[shown.poem%POEMS.length]; subText='本题：'+p.vol+'《'+p.t+'》'; }
       const rbtn = tk.read ? '<button class="rbtn" data-say="'+tk.id+'" data-kind="'+tk.read+'">🔊 朗读</button>' : '';
-      const showId = tk.read==='math' ? ' id="mathShow"' : (tk.read==='phonics' ? ' id="phonShow"' : '');
       h += '<div class="task'+(done?' done':'')+'" data-id="'+tk.id+'">'
          +   '<div class="ck" data-ck="'+tk.id+'">'+(done?'✓':'')+'</div>'
          +   '<div class="mid"><div class="nm">'+esc(tk.n)+badge+'</div>'
-         +     (tk.read ? '<div class="sub"'+showId+'>点右边 🔊 听一听</div>' : '')
+         +     (tk.read ? '<div class="sub"'+showId+'>'+subText+'</div>' : '')
          +   '</div>'+ rbtn +'</div>';
     });
     h += '</div>';
@@ -486,6 +535,55 @@ function renderLog(){
   }).join('');
 }
 
+function dayKey(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function weekDays(){ const d=new Date(); const off=(d.getDay()+6)%7; const s=new Date(d.getFullYear(),d.getMonth(),d.getDate()-off);
+  const arr=[]; for(let i=0;i<7;i++){ arr.push(dayKey(new Date(s.getFullYear(),s.getMonth(),s.getDate()+i))); } return arr; }
+function onTimeHM(hhmm){ if(!hhmm) return false; const p=String(hhmm).split(':'); return (+p[0]*60 + (+p[1]||0)) <= (20*60+30); }
+function dayRecord(k){
+  if(k===todayStr()){ const dn=Object.keys(state.done).length; return {done:Object.keys(state.done), pct:Math.round(dn/TOTAL*100), earned:state.todayEarned||0, rf:state.reflect||'', allDoneAt:state.allDoneAt||'', live:true}; }
+  const it=state.history[k]; if(!it) return null;
+  return {done:it.done||[], pct:it.pct||0, earned:it.earned||0, rf:it.reflect||'', allDoneAt:it.allDoneAt||''};
+}
+function fullStreak(){
+  let start=new Date(); const r=dayRecord(dayKey(start));
+  if(!(r && r.pct===100)) start=new Date(start.getFullYear(),start.getMonth(),start.getDate()-1);
+  let cnt=0;
+  for(let i=0;i<400;i++){ const rr=dayRecord(dayKey(new Date(start.getFullYear(),start.getMonth(),start.getDate()-i))); if(rr && rr.pct===100) cnt++; else break; }
+  return cnt;
+}
+function renderParent(){
+  const days=weekDays(); const wd=['一','二','三','四','五','六','日'], today=todayStr();
+  const recs=days.map(k=>({k, r:dayRecord(k)}));
+  const act=recs.filter(x=>x.r && (x.r.done.length || (x.r.rf||'').trim()));
+  const actDays=act.length;
+  const avg=actDays?Math.round(act.reduce((a,x)=>a+x.r.pct,0)/actDays):0;
+  const earn=recs.reduce((a,x)=>a+(x.r?x.r.earned:0),0);
+  const onTimeDays=recs.filter(x=>x.r && x.r.pct===100 && onTimeHM(x.r.allDoneAt)).length;
+  const fullDays=recs.filter(x=>x.r && x.r.pct===100).length;
+  let h='<div class="sum">'
+    + '<div class="b"><b>'+actDays+'/7</b><span>本周打卡天数</span></div>'
+    + '<div class="b"><b>'+avg+'%</b><span>平均完成率</span></div>'
+    + '<div class="b"><b>'+earn+'</b><span>本周获得积分</span></div></div>'
+    + '<div class="sum">'
+    + '<div class="b"><b>'+onTimeDays+'</b><span>20:30 前完成</span></div>'
+    + '<div class="b"><b>'+fullDays+'</b><span>全勤(100%)</span></div>'
+    + '<div class="b"><b>'+fullStreak()+'</b><span>连续全勤(天)</span></div></div>';
+  h+='<div style="font-weight:800;font-size:14px;margin:10px 2px 4px">各科本周完成率</div>';
+  GROUPS.forEach(g=>{
+    let done=0; recs.forEach(x=>{ if(x.r) g.tasks.forEach(t=>{ if(x.r.done.indexOf(t.id)>=0) done++; }); });
+    const tot=g.tasks.length*actDays, pct=tot?Math.round(done/tot*100):0;
+    h+='<div class="pd-row"><span class="rd">'+g.icon+' '+g.name+'</span><span class="rb"><i style="width:'+pct+'%"></i></span><span class="rv">'+(tot?(done+'/'+tot):'—')+'</span></div>';
+  });
+  h+='<div style="font-weight:800;font-size:14px;margin:12px 2px 4px">每日明细</div>';
+  recs.forEach((x,i)=>{
+    if(!x.r){ h+='<div class="hrow"><b>'+x.k+' 周'+wd[i]+'</b> · 未打卡</div>'; return; }
+    const on = x.r.pct===100 && onTimeHM(x.r.allDoneAt);
+    let tag = (x.k===today)?' · 今天':'';
+    if(x.r.pct===100) tag += on ? ' · ✅按时' : (x.r.allDoneAt? (' · 完成于 '+x.r.allDoneAt) : '');
+    h+='<div class="hrow"><div><b>'+x.k+' 周'+wd[i]+'</b> · 完成 '+x.r.done.length+'/'+TOTAL+'（'+x.r.pct+'%）· '+x.r.earned+' 分'+tag+'</div>'+(x.r.rf?('<div class="rf">📝 '+esc(x.r.rf)+'</div>'):'')+'</div>';
+  });
+  return h;
+}
 function renderHist(){
   const box = $('histCard');
   const rows=[];
@@ -514,11 +612,15 @@ document.addEventListener('click', e=>{
   const buy = e.target.closest('[data-buy]');    if(buy){ petBuy(buy.dataset.buy); return; }
 });
 $('btnDoneAll').addEventListener('click', ()=>{
+  playCoin();
   let added=0;
   ALL_TASKS.forEach(t=>{ if(!state.done[t.id]){ state.done[t.id]=true; if(!state.awarded[t.id]){state.awarded[t.id]=true; earn(PTS_PER,'完成：'+t.n+' +'+PTS_PER); added++;} } });
-  if(!state.allBonus && Object.keys(state.done).length>=TOTAL){ state.allBonus=true; earn(BONUS_ALL,'今日全部完成，额外 +'+BONUS_ALL); }
+  if(!state.allBonus && Object.keys(state.done).length>=TOTAL){ state.allBonus=true; state.allDoneAt=nowHM(); earn(BONUS_ALL,'今日全部完成，额外 +'+BONUS_ALL); }
   save(); render(); toast('一键完成，+'+ (added*PTS_PER + (state.allBonus?BONUS_ALL:0)) +' 分');
 });
+$('sndBtn').addEventListener('click', ()=>{ state.sound=!state.sound; save(); updateSndBtn(); playCoin(); toast(state.sound?'🔔 音效已开启':'🔕 音效已关闭'); });
+$('btnParent').addEventListener('click', ()=>{ const b=$('parentBox'); const open=(b.style.display==='none');
+  b.style.display=open?'block':'none'; b.innerHTML=open?renderParent():''; $('btnParent').textContent=open?'📉 收起报告':'📊 查看本周报告'; });
 $('btnReset').addEventListener('click', ()=>{
   if(!confirm('确定清空【今天】的打卡吗？（历史记录、总积分、宠物状态都会保留）')) return;
   state.done={}; state.awarded={}; state.allBonus=false; state.todayEarned=0; state.reflect='';
