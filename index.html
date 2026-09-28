@@ -25,7 +25,6 @@ body{
   background:var(--bg); color:var(--ink); font-size:17px; line-height:1.55; min-height:100vh;
   -webkit-user-select:none; user-select:none;
 }
-/* ===== 左栏 ===== */
 .app{display:flex; align-items:flex-start}
 .rail{width:88px; flex:0 0 88px; background:var(--rail); border-right:1px solid var(--line);
   position:sticky; top:0; height:100vh; overflow-y:auto; -webkit-overflow-scrolling:touch;
@@ -39,7 +38,6 @@ body{
 .rail button.on{background:#fff; color:var(--pink2); box-shadow:var(--shadow)}
 .rail button .cnt2{font-size:10px; font-weight:700; color:var(--dim)}
 .rail button.on .cnt2{color:var(--pink2)}
-/* ===== 主区 ===== */
 .main{flex:1; min-width:0; padding:calc(12px + env(safe-area-inset-top)) 12px calc(26px + env(safe-area-inset-bottom))}
 .inner{max-width:560px; margin:0 auto}
 h1{font-size:20px; font-weight:800; letter-spacing:.3px}
@@ -59,13 +57,11 @@ h1{font-size:20px; font-weight:800; letter-spacing:.3px}
 h2{font-size:16.5px; font-weight:800; margin:18px 4px 8px; display:flex; align-items:center; gap:7px}
 h2 .tip{font-size:12.5px; color:var(--dim); font-weight:600}
 .muted{color:var(--dim); font-size:13.5px; font-weight:600; line-height:1.7}
-/* 时间安排 */
 .timecard{margin-top:12px}
 .timecard .tline{display:flex; gap:10px; align-items:flex-start; padding:7px 10px; border-radius:12px; font-size:15px; font-weight:700}
 .timecard .tline b{color:var(--pink2); font-weight:800; min-width:56px; font-variant-numeric:tabular-nums}
 .timecard .tline.on{background:var(--pinksoft)}
 .nowline{font-size:13px; color:var(--dim); font-weight:700; margin-top:6px; padding-left:10px}
-/* 优先级 details */
 details.pri{margin-top:12px}
 details.pri summary{cursor:pointer; font-size:15px; font-weight:800; list-style:none}
 details.pri summary::-webkit-details-marker{display:none}
@@ -91,6 +87,30 @@ details.pri .row{display:flex; gap:9px; padding:7px 2px 0; font-size:14px; align
 .rbtn{flex:0 0 auto; border:1px solid var(--line); background:var(--card2); color:var(--pink2); border-radius:12px; padding:9px 12px; font-size:14px; font-weight:800; cursor:pointer; min-height:44px}
 .rbtn:active{transform:scale(.96)}
 .rbtn.on{background:var(--pink2); color:#fff; border-color:var(--pink2)}
+/* 日程 */
+.sched-head{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:12px;box-shadow:var(--shadow)}
+.sched-head .now{font-size:15px;font-weight:800}
+.sched-head .now b{color:var(--pink2)}
+.blk{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:12px; margin-top:10px; box-shadow:var(--shadow)}
+.blk.cur{border-color:var(--pink2); box-shadow:0 0 0 2px var(--pinksoft), var(--shadow)}
+.blk.past{opacity:.7}
+.bhd{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+.bt{font-size:12.5px; font-weight:800; color:var(--pink2); background:var(--pinksoft); border-radius:8px; padding:2px 8px; font-variant-numeric:tabular-nums; white-space:nowrap}
+.bnm{font-size:15.5px; font-weight:800; flex:1; min-width:120px}
+.bai{font-size:13px; color:var(--dim); font-weight:600; margin-top:6px; line-height:1.6}
+.bai .ailab{color:var(--pink2); font-weight:800}
+.blk .tasks{margin-top:6px}
+.blk .task{padding:7px 2px; min-height:42px}
+.blk .task+.task{border-top:1px dashed var(--line)}
+.blk .task .ck{width:26px;height:26px;font-size:15px;border-radius:9px}
+.blk .task .nm{font-size:15px}
+.acts2{display:flex; gap:8px; margin-top:8px; flex-wrap:wrap}
+.acts2 button{flex:1; min-width:88px; border:1px solid var(--line); background:var(--card2); color:var(--ink); border-radius:12px; padding:10px 8px; font-size:13.5px; font-weight:800; cursor:pointer; min-height:44px; font-variant-numeric:tabular-nums}
+.acts2 button.on{background:var(--pink2); color:#fff; border-color:var(--pink2)}
+.acts2 button:active{transform:scale(.97)}
+.badd{font-size:13px; font-weight:700; margin-top:8px}
+.badd.ok{color:#54885F}
+.badd.bad{color:#D5546E}
 /* 宠物 */
 .petcard{text-align:center}
 .petface{font-size:66px; line-height:1.1}
@@ -128,10 +148,8 @@ details.pri .row{display:flex; gap:9px; padding:7px 2px 0; font-size:14px; align
 .pd-row .rb{flex:1; height:10px; background:#F6E9EE; border-radius:99px; overflow:hidden; border:1px solid var(--line)}
 .pd-row .rb>i{display:block; height:100%; background:linear-gradient(90deg,#F9C6D2,#F48CA4)}
 .pd-row .rv{flex:0 0 70px; text-align:right; color:var(--dim); font-size:12px}
-/* 复盘 */
 textarea{width:100%; min-height:84px; resize:vertical; border:1px solid var(--line); border-radius:14px; background:var(--card2); padding:12px; font-size:15px; font-family:inherit; color:var(--ink); line-height:1.6; -webkit-user-select:text; user-select:text}
 textarea:focus{outline:2px solid var(--pinksoft)}
-/* 按钮 */
 .btns{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap}
 .btn{flex:1; min-width:120px; border:0; border-radius:16px; padding:14px 12px; font-size:15.5px; font-weight:800; cursor:pointer; min-height:50px}
 .btn.primary{background:linear-gradient(135deg,#F8B7C6,#F48CA4); color:#fff; box-shadow:0 6px 16px rgba(244,140,164,.3)}
@@ -164,13 +182,14 @@ textarea:focus{outline:2px solid var(--pinksoft)}
   .task .nm{font-size:19px}
   .task .sub{font-size:14px}
   .rbtn{font-size:16px; padding:12px 16px; min-height:50px}
-  .timecard .tline{font-size:17px}
-  .nowline{font-size:14.5px}
+  .timecard .tline{font-size:17px} .nowline{font-size:14.5px}
   .btn{font-size:17px; min-height:56px}
-  .petface{font-size:90px}
-  .petname{font-size:20px}
+  .petface{font-size:90px} .petname{font-size:20px}
   .grp{border-radius:22px}
   .lrow,.hrow{font-size:15px}
+  .bnm{font-size:17px} .bt{font-size:14px} .bai{font-size:14.5px}
+  .blk .task .nm{font-size:17px}
+  .acts2 button{font-size:15px; padding:12px 10px}
 }
 @media (min-width:1024px){
   body{font-size:20px}
@@ -196,21 +215,6 @@ textarea:focus{outline:2px solid var(--pinksoft)}
         <div id="closedNote" style="display:none;margin-top:11px;font-size:13.5px;font-weight:800;color:#D5546E;background:#FDECEF;border-radius:12px;padding:9px 11px">⏰ 已过 20:40，今天不能再打卡了，早点休息～</div>
       </div>
 
-      <div class="card timecard" id="timeCard">
-        <div class="tline" data-i="0"><b>16:30</b><span>开启今日任务</span></div>
-        <div class="tline" data-i="1"><b>20:20</b><span>收工预警，剩余 10 分钟</span></div>
-        <div class="tline" data-i="2"><b>20:30</b><span>全部学习结束，停止做题</span></div>
-        <div class="tline" data-i="3"><b>20:40</b><span>之后不能再打卡</span></div>
-        <div class="nowline" id="nowLine"></div>
-      </div>
-
-      <details class="card pri">
-        <summary>⭐ 任务优先级提示（点开）</summary>
-        <div class="row"><span class="lab high">最高优先级</span><span>学校课后习题、校信作业</span></div>
-        <div class="row"><span class="lab next">次优先</span><span>写字、控笔、口算、字母书写</span></div>
-        <div class="row"><span class="lab reduce">可减量</span><span>思维训练、古诗背诵、曲谱练习（时间紧可简化）</span></div>
-      </details>
-
       <div id="view"></div>
 
       <div class="btns">
@@ -220,7 +224,7 @@ textarea:focus{outline:2px solid var(--pinksoft)}
 
       <div class="foot">
         数据只保存在这台设备的浏览器里，不会上传联网。
-        <div id="verLine" style="margin-top:6px">婉欣学习打卡 v4</div>
+        <div id="verLine" style="margin-top:6px">婉欣学习打卡 v5</div>
       </div>
     </div>
   </main>
@@ -229,7 +233,7 @@ textarea:focus{outline:2px solid var(--pinksoft)}
 
 <script>
 /* ============================================================
-   婉欣学习打卡工作台 v3 —— 左栏分类导航 + 单文件 + localStorage
+   婉欣学习打卡工作台 v5 —— 左栏分类 + 日程时间轴 + localStorage
    ============================================================ */
 const KEY = 'wxcheckin';
 const PTS_PER = 5;
@@ -244,7 +248,6 @@ const LEVELS = [
   {min:600, name:'成年宠物',emoji:'😻'}
 ];
 
-/* ---------- 任务定义（key 对应左栏） ---------- */
 const GROUPS = [
   {key:'yuwen', name:'语文', icon:'📖', tasks:[
     {id:'yw1', n:'每日写字',  pri:'next'},
@@ -284,8 +287,25 @@ const ALL_TASKS = GROUPS.reduce((a,g)=>a.concat(g.tasks), []);
 const TOTAL = ALL_TASKS.length;
 const PRI_LABEL = {high:'⭐最高', next:'✨次优', reduce:'🌿可减量'};
 
-/* ---------- 左栏导航 ---------- */
+/* ---------- 日程（时间段） ---------- */
+const SCHEDULE = [
+  {s:'16:30', e:'17:00', icon:'🍪', title:'放学回家 · 点心放松', ai:'不碰学习，先休息。推送今日完整任务清单，预览今天要完成的事项。', preview:true},
+  {s:'17:00', e:'17:25', icon:'📖', title:'语文 · 控笔 + 每日写字', tasks:['yw2','yw1'], ai:'展示笔画示范，计时 25 分钟；到点提醒休息。', voice:'stroke', timer:25},
+  {s:'17:25', e:'17:35', icon:'🧘', title:'休息拉伸 · 离开书桌', ai:'站起来走动，远离屏幕。', rest:true, timer:10},
+  {s:'17:35', e:'18:00', icon:'📖', title:'语文 · 拼音练习 + 课后习题', tasks:['yw4','yw3'], ai:'AI 朗读拼音、读题目；完成后手动打卡。', voice:'pinyin', timer:25},
+  {s:'18:00', e:'18:30', icon:'🍚', title:'晚餐', ai:'暂停所有任务。', pause:true},
+  {s:'18:30', e:'18:55', icon:'➗', title:'数学 · 口算 + 数字练习 + 课后习题 + 校信作业', tasks:['sx2','sx1','sx3','sx4'], ai:'AI 随机出口算题、读题目；优先完成学校作业。', voice:'math', timer:25},
+  {s:'18:55', e:'19:05', icon:'🧘', title:'短暂休息', ai:'提醒休息。', rest:true, timer:10},
+  {s:'19:05', e:'19:30', icon:'🇬🇧', title:'英语 · 字母书写 + 自然拼读 + 绘本阅读', tasks:['yy3','yy1','yy2'], ai:'标准拼读朗读、绘本示范朗读；孩子手写字母，亲子共读。', voice:'phonics', timer:25},
+  {s:'19:30', e:'19:55', icon:'🎹', title:'钢琴 · 指法 + 曲谱 + 打卡', tasks:['gq2','gq3','gq1'], ai:'节拍器、播放示范乐曲；记录练习时长，完成打卡。', metro:true, timer:25},
+  {s:'19:55', e:'20:15', icon:'📚', title:'查漏补缺 · 古诗背诵 + 思维训练', tasks:['yw6','sx5'], ai:'AI 朗读古诗、抽查背诵；读思维训练题目并引导；时间紧张可口头完成，不必动笔。', voice:'poem', timer:20},
+  {s:'20:15', e:'20:30', icon:'🏃', title:'运动训练 + 洗漱（刷牙洗脸）', tasks:['yd1','xg2','xg3'], ai:'AI 计时运动；提醒刷牙洗漱；20:20 提前预警，20:30 强制停止全部学习。', timer:15},
+  {s:'20:30', e:'', icon:'🌙', title:'全部任务结束', ai:'停止全部学习，准备睡觉。', end:true},
+  {s:'', e:'', icon:'➕', title:'其他任务（机动安排）', tasks:['yw5','xg1'], ai:'亲子阅读可安排在任意时段；晨起刷牙早上完成即可。', extra:true}
+];
+
 const RAIL = [
+  {key:'schedule', icon:'⏰', label:'日程'},
   {key:'yuwen', icon:'📖', label:'语文'},
   {key:'shuxue', icon:'➗', label:'数学'},
   {key:'yingyu', icon:'🇬🇧', label:'英语'},
@@ -308,27 +328,32 @@ function esc(s){ return (s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','
 function toast(t){ const w=$('toast'); w.textContent=t; w.classList.add('show');
   clearTimeout(w._t); w._t=setTimeout(()=>w.classList.remove('show'),1900); }
 function nowHM(){ const d=new Date(); return pad(d.getHours())+':'+pad(d.getMinutes()); }
-/* 马里奥吃金币音效（WebAudio 方波 987→1318Hz），纯本地无外部音频 */
+function hm2min(s){ if(!s) return null; const p=String(s).split(':'); return (+p[0])*60+(+p[1]||0); }
+
 let actx=null;
+function ac(){ if(!actx){ actx=new (window.AudioContext||window.webkitAudioContext)(); } if(actx.state==='suspended'&&actx.resume) actx.resume(); return actx; }
 function playCoin(){ if(state && state.sound===false) return; try{
-  actx = actx || new (window.AudioContext||window.webkitAudioContext)();
-  const a=actx; if(a.state==='suspended' && a.resume) a.resume();
-  const t0=a.currentTime;
+  const a=ac(); const t0=a.currentTime;
   [[987.77,0,0.09],[1318.51,0.085,0.38]].forEach(function(p){
     const o=a.createOscillator(), g=a.createGain();
     o.type='square'; o.frequency.value=p[0]; o.connect(g); g.connect(a.destination);
     const s=t0+p[1];
-    g.gain.setValueAtTime(.0001,s);
-    g.gain.exponentialRampToValueAtTime(.28,s+.012);
-    g.gain.exponentialRampToValueAtTime(.0001,s+p[2]);
+    g.gain.setValueAtTime(.0001,s); g.gain.exponentialRampToValueAtTime(.28,s+.012); g.gain.exponentialRampToValueAtTime(.0001,s+p[2]);
     o.start(s); o.stop(s+p[2]+.03);
   });
  }catch(e){} }
+function metroClick(strong){ if(state && state.sound===false) return; try{
+  const a=ac(); const o=a.createOscillator(), g=a.createGain();
+  o.type='square'; o.frequency.value= strong?1320:880; o.connect(g); g.connect(a.destination);
+  const t=a.currentTime;
+  g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(strong?.32:.18,t+.005); g.gain.exponentialRampToValueAtTime(.0001,t+.06);
+  o.start(t); o.stop(t+.08);
+ }catch(e){} }
 
 /* ---------- 状态 ---------- */
-let state = null, cur = 'yuwen', rfT=null;
+let state = null, cur = 'schedule', rfT=null, lastBlk=-2;
 function defState(){
-  return { v:3, today:todayStr(),
+  return { v:5, today:todayStr(),
     done:{}, awarded:{}, allBonus:false, allDoneAt:'', todayEarned:0, sound:true,
     points:0, peak:0,
     pet:{ happiness:0, acc:'' },
@@ -344,8 +369,7 @@ function load(){
   if(typeof state.peak!=='number') state.peak=state.points||0;
   if(typeof state.allDoneAt!=='string') state.allDoneAt='';
   if(typeof state.sound!=='boolean') state.sound=true;
-  rollover();
-  save();
+  rollover(); save();
 }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
 function rollover(){
@@ -353,10 +377,8 @@ function rollover(){
   if(state.today !== t){
     const doneIds = Object.keys(state.done);
     if(doneIds.length || (state.reflect||'').trim()){
-      state.history[state.today] = {
-        done: doneIds, pct: Math.round(doneIds.length/TOTAL*100),
-        earned: state.todayEarned||0, reflect: (state.reflect||'').trim(), allDoneAt: state.allDoneAt||''
-      };
+      state.history[state.today] = { done: doneIds, pct: Math.round(doneIds.length/TOTAL*100),
+        earned: state.todayEarned||0, reflect: (state.reflect||'').trim(), allDoneAt: state.allDoneAt||'' };
     }
     state.today = t; state.done={}; state.awarded={};
     state.allBonus=false; state.allDoneAt=''; state.todayEarned=0; state.reflect='';
@@ -371,23 +393,22 @@ function addLog(text, delta){
 }
 function earn(n, why){ state.points += n; state.peak += n; state.todayEarned += n; addLog(why, +n); }
 function spend(n, why){ if(state.points < n) return false; state.points -= n; addLog(why, -n); return true; }
+function deduct(n, why){ state.points=Math.max(0,state.points-n); state.peak=Math.max(0,state.peak-n); state.todayEarned=Math.max(0,state.todayEarned-n); addLog(why,-n); }
 
 /* ---------- 打卡 ---------- */
+function checkinClosed(){ const d=new Date(); return (d.getHours()*60+d.getMinutes()) >= (20*60+40); }
 function isDone(id){ return !!state.done[id]; }
 function nameOf(id){ const t = ALL_TASKS.find(x=>x.id===id); return t?t.n:id; }
-function checkinClosed(){ const d=new Date(); return (d.getHours()*60+d.getMinutes()) >= (20*60+40); }
-function deduct(n, why){ state.points=Math.max(0,state.points-n); state.peak=Math.max(0,state.peak-n); state.todayEarned=Math.max(0,state.todayEarned-n); addLog(why,-n); }
 function toggleTask(id){
   if(checkinClosed()){ toast('⏰ 已过 20:40，今天不能再打卡了'); return; }
   if(state.done[id]){
-    delete state.done[id];                                  // 取消打卡：扣回相应积分
+    delete state.done[id];
     if(state.awarded[id]){ delete state.awarded[id];
       deduct(PTS_PER, '取消：'+nameOf(id)+' -'+PTS_PER);
       if(state.allBonus){ state.allBonus=false; deduct(BONUS_ALL,'取消全部完成 -'+BONUS_ALL); } }
     toast('已取消打卡 -'+PTS_PER+' 分');
   } else {
-    state.done[id] = true;
-    playCoin();
+    state.done[id] = true; playCoin();
     if(!state.awarded[id]){ state.awarded[id]=true; earn(PTS_PER, '完成：'+nameOf(id)+' +'+PTS_PER); }
     const n = Object.keys(state.done).length;
     if(n >= TOTAL && !state.allBonus){ state.allBonus=true; state.allDoneAt=nowHM(); earn(BONUS_ALL, '今日全部完成，额外 +'+BONUS_ALL); toast('🎉 全部完成！额外 +'+BONUS_ALL+' 分'); }
@@ -407,7 +428,7 @@ function petBuy(kind){
   save(); render();
 }
 
-/* ---------- 语音朗读（Web Speech API，仅朗读/出题） ---------- */
+/* ---------- 语音朗读 ---------- */
 let curSpeakKey = null;
 function say(text, lang, key){
   if(!('speechSynthesis' in window)){ toast('此浏览器暂不支持语音朗读'); return; }
@@ -419,7 +440,7 @@ function say(text, lang, key){
   u.onend = u.onerror = () => { if(curSpeakKey===key){ curSpeakKey=null; setReadBtn(key,false); } };
   try{ window.speechSynthesis.speak(u); }catch(e){ toast('朗读失败，请再点一次'); curSpeakKey=null; }
 }
-function setReadBtn(key,on){ document.querySelectorAll('.rbtn[data-read="'+key+'"]').forEach(b=>b.classList.toggle('on',!!on)); }
+function setReadBtn(key,on){ document.querySelectorAll('.rbtn[data-read="'+key+'"],.acts2 button[data-read="'+key+'"]').forEach(b=>b.classList.toggle('on',!!on)); }
 
 const POEMS = [
   {t:'咏鹅', a:'骆宾王', vol:'一上·日积月累', x:'鹅，鹅，鹅，曲项向天歌。白毛浮绿水，红掌拨清波。'},
@@ -441,10 +462,7 @@ let shown = {poem:0, math:'', phon:''};
 
 function numCn(n){
   const d=['零','一','二','三','四','五','六','七','八','九'];
-  if(n<10) return d[n];
-  if(n<20) return '十'+(n%10?d[n%10]:'');
-  if(n===20) return '二十';
-  return String(n);
+  if(n<10) return d[n]; if(n<20) return '十'+(n%10?d[n%10]:''); if(n===20) return '二十'; return String(n);
 }
 function genMath(){
   const plus = Math.random()<0.55; let a,b,op;
@@ -467,32 +485,62 @@ function doRead(kind){
     say(p[0]+', '+p[1], 'en-US', 'phonics'); toast('🔤 '+p[0]+' — '+p[1]); }
 }
 
+/* ---------- 日程：计时 / 节拍器 / 播报 ---------- */
+let bTimer = null, metro = null;
+function blkTimerBtnText(i){
+  if(bTimer && bTimer.i===i){ const l=bTimer.left; return '⏸ '+pad(Math.floor(l/60))+':'+pad(l%60); }
+  const b=SCHEDULE[i];
+  if(b.timer) return '▶ '+b.timer+' 分钟计时';
+  const t=hm2min(b.e); return t!=null? ('▶ 不计时') : '▶ 不计时';
+}
+function startBlockTimer(i){
+  if(checkinClosed() && SCHEDULE[i].end) {}
+  if(bTimer && bTimer.i===i){ clearInterval(bTimer.iv); bTimer=null; renderView(); toast('已暂停计时'); return; }
+  if(bTimer){ clearInterval(bTimer.iv); bTimer=null; }
+  const mins = SCHEDULE[i].timer || Math.max(5, (hm2min(SCHEDULE[i].e)-hm2min(SCHEDULE[i].s)));
+  bTimer={i, left: mins*60, iv:null};
+  bTimer.iv=setInterval(()=>{ bTimer.left--; if(bTimer.left<=0){ const b=SCHEDULE[i]; clearInterval(bTimer.iv); bTimer=null; renderView();
+      playCoin(); say('时间到，'+b.title+'结束啦，'+(b.rest?'继续休息一下':'休息一下或进入下一环节'), 'zh-CN','blkend'); toast('⏰ 该环节结束：'+b.title);
+    } else { const el=document.getElementById('btm-'+i); if(el) el.textContent=blkTimerBtnText(i); } }, 1000);
+  renderView(); toast('⏱️ 开始计时 '+mins+' 分钟');
+}
+function toggleMetro(){
+  if(metro){ clearInterval(metro); metro=null; renderView(); toast('节拍器已停止'); return; }
+  let beat=0; metro=setInterval(()=>{ metroClick(beat%4===0); beat++; }, 500); // 120 BPM
+  renderView(); toast('🎵 节拍器 120 开始（再点停止）');
+}
+function blkRead(i){
+  const b=SCHEDULE[i]; let text=b.title+'。';
+  if(b.tasks && b.tasks.length) text += '本环节任务：'+b.tasks.map(nameOf).join('、')+'。';
+  text += b.ai||'';
+  if(b.voice==='pinyin') text += '。'+PINYIN[idx.pinyin%PINYIN.length];
+  else if(b.voice==='poem'){ const p=POEMS[idx.poem%POEMS.length]; idx.poem++; text += '。'+p.t+'，'+p.a+'。'+p.x; }
+  else if(b.voice==='stroke') text += '。握好笔，坐姿做到：头正、身直、臂开、足安。今天练基本笔画：横、竖、撇、点、捺。';
+  else if(b.voice==='math'){ const m=genMath(); text += '。口算题：'+numCn(m.a)+(m.op==='+'?' 加 ':' 减 ')+numCn(m.b)+' 等于几？'; }
+  else if(b.voice==='phonics'){ const p=PHON[idx.phonics%PHON.length]; idx.phonics++; say(p[0]+', '+p[1],'en-US','blk'+i); toast('🔤 '+p[0]+' — '+p[1]); return; }
+  say(text,'zh-CN','blk'+i); toast('🔊 '+b.title);
+}
+function sayTodayList(){
+  const t='今日共 '+TOTAL+' 项任务。'+GROUPS.map(g=> g.name+'：'+g.tasks.map(x=>x.n).join('、')).join('。') + '。加油！';
+  say(t,'zh-CN','todaylist'); toast('🔊 播报今日任务清单');
+}
+
 /* ============================================================
    渲染
    ============================================================ */
 function goTab(k){ cur=k; render(); }
 function render(){
-  renderHeader();
-  renderRail();
-  renderView();
-  renderTime(new Date());
-  updateSndBtn();
+  renderHeader(); renderRail(); renderView(); renderTime(new Date()); updateSndBtn();
 }
 function updateSndBtn(){ const b=$('sndBtn'); if(b) b.textContent = state.sound?'🔔':'🔕'; }
-
 function renderHeader(){
   const now=new Date();
   $('dateLine').textContent = niceDate(now);
   const dn = Object.keys(state.done).length, pct = Math.round(dn/TOTAL*100);
-  $('pbar').style.width = pct+'%';
-  $('pct').textContent = pct+'%';
-  $('cnt').textContent = dn+'/'+TOTAL;
-  $('pPoints').textContent = state.peak;
-  $('pBal').textContent = state.points;
-  $('pToday').textContent = state.todayEarned;
+  $('pbar').style.width = pct+'%'; $('pct').textContent = pct+'%'; $('cnt').textContent = dn+'/'+TOTAL;
+  $('pPoints').textContent = state.peak; $('pBal').textContent = state.points; $('pToday').textContent = state.todayEarned;
   const cn=$('closedNote'); if(cn) cn.style.display = checkinClosed()?'block':'none';
 }
-
 function renderRail(){
   $('rail').innerHTML = '<div class="rlogo">🍄</div>' + RAIL.map(r=>{
     const g = GROUPS.find(x=>x.key===r.key);
@@ -500,36 +548,78 @@ function renderRail(){
     return '<button data-tab="'+r.key+'" class="'+(cur===r.key?'on':'')+'"><span class="e">'+r.icon+'</span>'+r.label+(cnt?'<span class="cnt2">'+cnt+'</span>':'')+'</button>';
   }).join('');
 }
-
 function renderView(){
   const v=$('view'); const g=GROUPS.find(x=>x.key===cur);
-  if(g) v.innerHTML = renderGroup(g);
+  if(cur==='schedule') v.innerHTML = renderSchedule();
+  else if(g) v.innerHTML = renderGroup(g);
   else if(cur==='pet') v.innerHTML = renderPet();
   else if(cur==='log') v.innerHTML = '<h2>🧾 积分变动记录</h2>'+renderLog()+'<h2>📒 历史打卡记录</h2>'+renderHist();
   else if(cur==='parent') v.innerHTML = '<h2>👪 家长查看 · 本周报告</h2>'+renderParent();
   else if(cur==='setup') v.innerHTML = renderSetup();
 }
 
+function taskRow(tk){
+  const done=isDone(tk.id);
+  const badge = tk.pri ? '<span class="badge '+tk.pri+'">'+PRI_LABEL[tk.pri]+'</span>' : '';
+  const showId = tk.read==='math' ? ' id="mathShow"' : (tk.read==='phonics' ? ' id="phonShow"' : (tk.read==='poem' ? ' id="poemShow"' : ''));
+  let subText='点右边 🔊 听一听';
+  if(tk.read==='math') subText = shown.math?('本题：'+shown.math):subText;
+  else if(tk.read==='phonics') subText = shown.phon?('本题：'+shown.phon):subText;
+  else if(tk.read==='poem'){ const p=POEMS[shown.poem%POEMS.length]; subText='本题：'+p.vol+'《'+p.t+'》'; }
+  const rbtn = tk.read ? '<button class="rbtn" data-say="'+tk.id+'" data-kind="'+tk.read+'">🔊 朗读</button>' : '';
+  return '<div class="task'+(done?' done':'')+'" data-id="'+tk.id+'">'
+    +  '<div class="ck" data-ck="'+tk.id+'">'+(done?'✓':'')+'</div>'
+    +  '<div class="mid"><div class="nm">'+esc(tk.n)+badge+'</div>'
+    +    (tk.read ? '<div class="sub"'+showId+'>'+subText+'</div>' : '')
+    +  '</div>'+ rbtn +'</div>';
+}
 function renderGroup(g){
   const dn=g.tasks.filter(x=>isDone(x.id)).length, pct=Math.round(dn/g.tasks.length*100);
   let h='<h2>'+g.icon+' '+g.name+' <span class="tip">'+dn+'/'+g.tasks.length+' 已完成</span></h2><div class="grp">';
-  g.tasks.forEach(tk=>{
-    const done=isDone(tk.id);
-    const badge = tk.pri ? '<span class="badge '+tk.pri+'">'+PRI_LABEL[tk.pri]+'</span>' : '';
-    const showId = tk.read==='math' ? ' id="mathShow"' : (tk.read==='phonics' ? ' id="phonShow"' : (tk.read==='poem' ? ' id="poemShow"' : ''));
-    let subText='点右边 🔊 听一听';
-    if(tk.read==='math') subText = shown.math?('本题：'+shown.math):subText;
-    else if(tk.read==='phonics') subText = shown.phon?('本题：'+shown.phon):subText;
-    else if(tk.read==='poem'){ const p=POEMS[shown.poem%POEMS.length]; subText='本题：'+p.vol+'《'+p.t+'》'; }
-    const rbtn = tk.read ? '<button class="rbtn" data-say="'+tk.id+'" data-kind="'+tk.read+'">🔊 朗读</button>' : '';
-    h+='<div class="task'+(done?' done':'')+'" data-id="'+tk.id+'">'
-      +  '<div class="ck" data-ck="'+tk.id+'">'+(done?'✓':'')+'</div>'
-      +  '<div class="mid"><div class="nm">'+esc(tk.n)+badge+'</div>'
-      +    (tk.read ? '<div class="sub"'+showId+'>'+subText+'</div>' : '')
-      +  '</div>'+ rbtn +'</div>';
-  });
+  g.tasks.forEach(tk=>h+=taskRow(tk));
   h+='</div><div class="pbar" style="margin-top:12px"><i style="width:'+pct+'%"></i></div>';
   h+='<div class="ptxt" style="margin-top:6px"><span>'+g.name+'进度 '+dn+'/'+g.tasks.length+'</span><span>'+pct+'%</span></div>';
+  return h;
+}
+
+function curBlkIdx(){
+  const now=new Date(); const t=now.getHours()*60+now.getMinutes();
+  let idx=-1; for(let i=0;i<SCHEDULE.length;i++){ const m=hm2min(SCHEDULE[i].s); if(m!=null && t>=m) idx=i; }
+  return idx;
+}
+function renderSchedule(){
+  const now=new Date(), t=now.getHours()*60+now.getMinutes();
+  const ci=curBlkIdx();
+  let h='<h2>⏰ 今日日程 <span class="tip">'+nowHM()+' 当前</span></h2>';
+  h+='<div class="sched-head"><div class="now">🕐 现在 <b>'+(ci>=0? SCHEDULE[ci].icon+' '+SCHEDULE[ci].title : '未开始')+'</b></div>'
+    +'<div class="muted" style="margin-top:6px">时间紧可压缩「可减量」任务；20:30 收工，20:40 后不能再打卡。</div>'
+    +'<div class="acts2" style="margin-top:10px"><button data-act="saylist">🔊 播报今日完整任务清单</button></div></div>';
+  h+='<div class="grp" style="margin-top:10px">'+GROUPS.map(g=>'<div class="task" style="min-height:40px"><div class="mid"><div class="nm" style="font-size:14px">'+g.icon+' '+g.name+' · '+g.tasks.filter(x=>isDone(x.id)).length+'/'+g.tasks.length+'</div></div></div>').join('')+'</div>';
+
+  SCHEDULE.forEach((b,i)=>{
+    const cls = 'blk' + (i===ci?' cur':'') + ((hm2min(b.e)!=null && t>hm2min(b.e))?' past':'');
+    const time = b.s ? (b.e? (b.s+' – '+b.e) : b.s) : '机动';
+    h+='<div class="'+cls+'">';
+    h+='<div class="bhd"><span class="bt">'+time+'</span><span class="nm" style="flex:1;min-width:120px">'+b.icon+' '+esc(b.title)+'</span></div>';
+    h+='<div class="bai"><span class="ailab">💡 AI：</span>'+esc(b.ai)+'</div>';
+    if(b.tasks && b.tasks.length){
+      h+='<div class="tasks">'+b.tasks.map(id=>{ const tk=ALL_TASKS.find(x=>x.id===id); return tk?taskRow(tk):''; }).join('')+'</div>';
+    }
+    const hasTimer = !!b.timer;
+    if(b.timer || b.voice || b.metro || b.tasks){
+      h+='<div class="acts2">';
+      if(b.voice || b.ai) h+='<button data-read="blk'+i+'" data-blkvoice="'+i+'">🔊 听提示</button>';
+      if(hasTimer) h+='<button id="btm-'+i+'" data-blktm="'+i+'" class="'+(bTimer&&bTimer.i===i?'on':'')+'">'+blkTimerBtnText(i)+'</button>';
+      if(b.metro) h+='<button data-metro="1" class="'+(metro?'on':'')+'">🎹 节拍器</button>';
+      h+='</div>';
+    }
+    // 打卡状态
+    if(b.tasks && b.tasks.length){
+      const dn=b.tasks.filter(id=>isDone(id)).length, all=b.tasks.every(id=>isDone(id));
+      h+='<div class="badd '+(all?'ok':'')+'">'+(all?'✅ 本环节已全部打卡':'本环节打卡 '+dn+'/'+b.tasks.length)+'</div>';
+    }
+    h+='</div>';
+  });
   return h;
 }
 
@@ -539,49 +629,33 @@ function renderPet(){
   let h='<h2>🐱 我的宠物</h2><div class="card petcard">';
   h+='<div class="petface">'+L.emoji+acc+'</div><div class="petname">'+PET_NAME+'</div>';
   h+='<div class="petlv">当前等级：'+L.name+'</div>';
-  h+='<div class="petstats">'
-    +  '<div class="pstat"><b>'+state.peak+'</b><span>总积分</span></div>'
-    +  '<div class="pstat"><b>'+p.happiness+'</b><span>开心值</span></div>'
-    +  '<div class="pstat"><b>'+state.points+'</b><span>可用积分</span></div></div>';
+  h+='<div class="petstats"><div class="pstat"><b>'+state.peak+'</b><span>总积分</span></div><div class="pstat"><b>'+p.happiness+'</b><span>开心值</span></div><div class="pstat"><b>'+state.points+'</b><span>可用积分</span></div></div>';
   const hp=Math.max(0,Math.min(100,p.happiness));
   h+='<div class="happy">开心值 '+p.happiness+'<div class="bar"><i style="width:'+hp+'%"></i></div></div>';
-  h+='<div class="acts">'
-    +  '<button data-buy="feed">🍚 喂食<br><span class="c">'+COST.feed+' 分 · 开心+1</span></button>'
-    +  '<button data-buy="play">🎾 玩耍<br><span class="c">'+COST.play+' 分 · 开心+2</span></button>'
-    +  '<button data-buy="acc">🎀 买配饰<br><span class="c">'+COST.acc+' 分</span></button></div>';
+  h+='<div class="acts"><button data-buy="feed">🍚 喂食<br><span class="c">'+COST.feed+' 分 · 开心+1</span></button><button data-buy="play">🎾 玩耍<br><span class="c">'+COST.play+' 分 · 开心+2</span></button><button data-buy="acc">🎀 买配饰<br><span class="c">'+COST.acc+' 分</span></button></div>';
   h+='<div class="next-lv">'+(N?('距离「'+N.name+'」还差 '+(N.min-state.peak)+' 总积分'):'已经是最高等级啦，太厉害了！')+'</div>';
   return h+'</div>';
 }
-
 function renderLog(){
   if(!state.log.length) return '<div class="card"><div class="muted">还没有积分记录～ 打卡就会出现在这里。</div></div>';
-  return '<div class="card">'+state.log.slice(0,30).map(l=>{
-    const cls=l.delta>=0?'up':'dn', sign=l.delta>=0?'+':'';
-    return '<div class="lrow"><span>'+esc(l.text)+'</span><span class="r"><span class="'+cls+'">'+sign+l.delta+'</span> · '+l.when+'</span></div>';
-  }).join('')+'</div>';
+  return '<div class="card">'+state.log.slice(0,30).map(l=>{ const cls=l.delta>=0?'up':'dn', sign=l.delta>=0?'+':'';
+    return '<div class="lrow"><span>'+esc(l.text)+'</span><span class="r"><span class="'+cls+'">'+sign+l.delta+'</span> · '+l.when+'</span></div>'; }).join('')+'</div>';
 }
-
 function renderHist(){
-  const today=todayStr(); const rows=[];
-  const dn=Object.keys(state.done).length;
-  if(dn || (state.reflect||'').trim())
-    rows.push({d:today, pct:Math.round(dn/TOTAL*100), n:dn, earned:state.todayEarned, rf:state.reflect, live:true});
+  const today=todayStr(); const rows=[]; const dn=Object.keys(state.done).length;
+  if(dn || (state.reflect||'').trim()) rows.push({d:today, pct:Math.round(dn/TOTAL*100), n:dn, earned:state.todayEarned, rf:state.reflect, live:true});
   Object.keys(state.history).sort().reverse().forEach(k=>{ if(k===today) return; const it=state.history[k];
     rows.push({d:k, pct:it.pct||0, n:(it.done||[]).length, earned:it.earned||0, rf:it.reflect||'', live:false}); });
   if(!rows.length) return '<div class="card"><div class="muted">还没有历史记录～ 完成后会存档到这里。</div></div>';
   return '<div class="card">'+rows.slice(0,30).map(r=>'<div class="hrow"><div><b>'+r.d+(r.live?' · 今天':'')+'</b> · 完成 '+r.n+'/'+TOTAL+'（'+r.pct+'%）· '+r.earned+' 分</div>'+(r.rf?('<div class="rf">📝 '+esc(r.rf)+'</div>'):'')+'</div>').join('')+'</div>';
 }
-
 function renderSetup(){
   return '<h2>📝 今日复盘</h2><div class="card"><textarea id="reflect" placeholder="今天哪里做得好？哪里可以更快一点？（自动保存）"></textarea></div>'
     + '<h2>💾 数据备份</h2><div class="card"><div class="muted" style="margin-bottom:8px">数据存在本机浏览器里，换设备或清理缓存前先导出备份。</div>'
     + '<div class="row" style="display:flex;gap:9px"><button class="btn ghost sm" data-act="export">⬇️ 导出备份</button><button class="btn ghost sm" data-act="import">⬆️ 导入备份</button></div>'
     + '<input type="file" id="fileImport" accept="application/json,.json" style="display:none"></div>'
-    + '<h2>🔔 音效</h2><div class="card"><div class="muted">每次打卡播放马里奥吃金币声。点顶部圆按钮或这里切换。</div>'
-    + '<div class="row" style="display:flex;gap:9px;margin-top:10px"><button class="btn ghost sm" id="sndBtn2">在当前开关</button></div></div>';
+    + '<h2>🔔 音效</h2><div class="card"><div class="muted">打卡/节拍器音效。点顶部圆按钮切换。</div></div>';
 }
-
-/* ---------- 家长周报计算 ---------- */
 function dayKey(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
 function weekDays(){ const d=new Date(); const off=(d.getDay()+6)%7; const s=new Date(d.getFullYear(),d.getMonth(),d.getDate()-off);
   const arr=[]; for(let i=0;i<7;i++){ arr.push(dayKey(new Date(s.getFullYear(),s.getMonth(),s.getDate()+i))); } return arr; }
@@ -602,37 +676,24 @@ function renderParent(){
   const days=weekDays(); const wd=['一','二','三','四','五','六','日'], today=todayStr();
   const recs=days.map(k=>({k, r:dayRecord(k)}));
   const act=recs.filter(x=>x.r && (x.r.done.length || (x.r.rf||'').trim()));
-  const actDays=act.length;
-  const avg=actDays?Math.round(act.reduce((a,x)=>a+x.r.pct,0)/actDays):0;
+  const actDays=act.length, avg=actDays?Math.round(act.reduce((a,x)=>a+x.r.pct,0)/actDays):0;
   const earn=recs.reduce((a,x)=>a+(x.r?x.r.earned:0),0);
   const onTimeDays=recs.filter(x=>x.r && x.r.pct===100 && onTimeHM(x.r.allDoneAt)).length;
   const fullDays=recs.filter(x=>x.r && x.r.pct===100).length;
   let h='<div class="card"><div class="sum">'
-    + '<div class="b"><b>'+actDays+'/7</b><span>本周打卡天数</span></div>'
-    + '<div class="b"><b>'+avg+'%</b><span>平均完成率</span></div>'
-    + '<div class="b"><b>'+earn+'</b><span>本周获得积分</span></div></div>'
-    + '<div class="sum">'
-    + '<div class="b"><b>'+onTimeDays+'</b><span>20:30 前完成</span></div>'
-    + '<div class="b"><b>'+fullDays+'</b><span>全勤(100%)</span></div>'
-    + '<div class="b"><b>'+fullStreak()+'</b><span>连续全勤(天)</span></div></div>';
+    + '<div class="b"><b>'+actDays+'/7</b><span>本周打卡天数</span></div><div class="b"><b>'+avg+'%</b><span>平均完成率</span></div><div class="b"><b>'+earn+'</b><span>本周获得积分</span></div></div>'
+    + '<div class="sum"><div class="b"><b>'+onTimeDays+'</b><span>20:30 前完成</span></div><div class="b"><b>'+fullDays+'</b><span>全勤(100%)</span></div><div class="b"><b>'+fullStreak()+'</b><span>连续全勤(天)</span></div></div>';
   h+='<div style="font-weight:800;font-size:14px;margin:10px 2px 4px">各科本周完成率</div>';
-  GROUPS.forEach(g=>{
-    let done=0; recs.forEach(x=>{ if(x.r) g.tasks.forEach(t=>{ if(x.r.done.indexOf(t.id)>=0) done++; }); });
+  GROUPS.forEach(g=>{ let done=0; recs.forEach(x=>{ if(x.r) g.tasks.forEach(t=>{ if(x.r.done.indexOf(t.id)>=0) done++; }); });
     const tot=g.tasks.length*actDays, pct=tot?Math.round(done/tot*100):0;
-    h+='<div class="pd-row"><span class="rd">'+g.icon+' '+g.name+'</span><span class="rb"><i style="width:'+pct+'%"></i></span><span class="rv">'+(tot?(done+'/'+tot):'—')+'</span></div>';
-  });
+    h+='<div class="pd-row"><span class="rd">'+g.icon+' '+g.name+'</span><span class="rb"><i style="width:'+pct+'%"></i></span><span class="rv">'+(tot?(done+'/'+tot):'—')+'</span></div>'; });
   h+='<div style="font-weight:800;font-size:14px;margin:12px 2px 4px">每日明细</div>';
-  recs.forEach((x,i)=>{
-    if(!x.r){ h+='<div class="hrow"><b>'+x.k+' 周'+wd[i]+'</b> · 未打卡</div>'; return; }
-    const on=x.r.pct===100 && onTimeHM(x.r.allDoneAt);
-    let tag=(x.k===today)?' · 今天':'';
+  recs.forEach((x,i)=>{ if(!x.r){ h+='<div class="hrow"><b>'+x.k+' 周'+wd[i]+'</b> · 未打卡</div>'; return; }
+    const on=x.r.pct===100 && onTimeHM(x.r.allDoneAt); let tag=(x.k===today)?' · 今天':'';
     if(x.r.pct===100) tag += on ? ' · ✅按时' : (x.r.allDoneAt?(' · 完成于 '+x.r.allDoneAt):'');
-    h+='<div class="hrow"><div><b>'+x.k+' 周'+wd[i]+'</b> · 完成 '+x.r.done.length+'/'+TOTAL+'（'+x.r.pct+'%）· '+x.r.earned+' 分'+tag+'</div>'+(x.r.rf?('<div class="rf">📝 '+esc(x.r.rf)+'</div>'):'')+'</div>';
-  });
+    h+='<div class="hrow"><div><b>'+x.k+' 周'+wd[i]+'</b> · 完成 '+x.r.done.length+'/'+TOTAL+'（'+x.r.pct+'%）· '+x.r.earned+' 分'+tag+'</div>'+(x.r.rf?('<div class="rf">📝 '+esc(x.r.rf)+'</div>'):'')+'</div>'; });
   return h+'</div>';
 }
-
-/* ---------- 时间提示 ---------- */
 function renderTime(now){
   const t=now.getHours()*60+now.getMinutes();
   const m=[16*60+30, 20*60+20, 20*60+30, 20*60+40];
@@ -642,7 +703,6 @@ function renderTime(now){
   else if(t<m[2]){ active=1; label='收工预警，还剩 10 分钟！'; }
   else if(t<m[3]){ active=2; label='已过 20:30，停止做题，准备收尾～'; }
   else { active=3; label='已过 20:40，今天停止打卡啦，早点休息～'; }
-  document.querySelectorAll('#timeCard .tline').forEach(el=>el.classList.toggle('on', +el.dataset.i===active));
   const nl=$('nowLine'); if(nl) nl.textContent='🕐 现在 '+pad(now.getHours())+':'+pad(now.getMinutes())+' · '+label;
 }
 
@@ -653,11 +713,16 @@ document.addEventListener('click', e=>{
   const tab=e.target.closest('[data-tab]'); if(tab){ goTab(tab.dataset.tab); return; }
   const ck=e.target.closest('[data-ck]');   if(ck){ toggleTask(ck.dataset.ck); return; }
   const sb=e.target.closest('[data-say]');  if(sb){ doRead(sb.dataset.kind); return; }
+  const bv=e.target.closest('[data-blkvoice]'); if(bv){ blkRead(+bv.dataset.blkvoice); return; }
+  const bt=e.target.closest('[data-blktm]'); if(bt){ startBlockTimer(+bt.dataset.blktm); return; }
+  if(e.target.closest('[data-metro]')){ toggleMetro(); return; }
   const buy=e.target.closest('[data-buy]'); if(buy){ petBuy(buy.dataset.buy); return; }
   const act=e.target.closest('[data-act]');
-  if(act){ if(act.dataset.act==='export') exportData();
-    else if(act.dataset.act==='import'){ const fi=$('fileImport'); if(fi) fi.click(); } return; }
-  if(e.target && e.target.id==='sndBtn2'){ state.sound=!state.sound; save(); updateSndBtn(); playCoin(); toast(state.sound?'🔔 音效已开启':'🔕 音效已关闭'); return; }
+  if(act){ const a=act.dataset.act;
+    if(a==='export') exportData();
+    else if(a==='import'){ const fi=$('fileImport'); if(fi) fi.click(); }
+    else if(a==='saylist') sayTodayList();
+    return; }
 });
 document.addEventListener('input', e=>{ if(e.target && e.target.id==='reflect'){ clearTimeout(rfT); rfT=setTimeout(()=>{ state.reflect=e.target.value; save(); },400); } });
 document.addEventListener('change', e=>{ if(e.target && e.target.id==='fileImport') importFile(e.target); });
@@ -674,7 +739,7 @@ $('btnReset').addEventListener('click', ()=>{
   state.done={}; state.awarded={}; state.allBonus=false; state.allDoneAt=''; state.todayEarned=0; state.reflect='';
   save(); render(); toast('已重置今日打卡（积分和宠物保留）');
 });
-$('sndBtn').addEventListener('click', ()=>{ state.sound=!state.sound; save(); updateSndBtn(); playCoin(); toast(state.sound?'🔔 音效已开启':'🔕 音效已关闭'); });
+$('sndBtn').addEventListener('click', ()=>{ state.sound=!state.sound; save(); updateSndBtn(); if(state.sound) playCoin(); toast(state.sound?'🔔 音效已开启':'🔕 音效已关闭'); });
 
 function exportData(){ try{ const blob=new Blob([JSON.stringify(state)],{type:'application/json'}); const url=URL.createObjectURL(blob);
   const a=document.createElement('a'); a.href=url; a.download='婉欣打卡备份_'+todayStr()+'.json'; document.body.appendChild(a); a.click();
@@ -686,10 +751,13 @@ function importFile(input){ const f=input.files&&input.files[0]; if(!f) return; 
   }catch(e){ toast('文件格式不对'); } };
   rd.readAsText(f); }
 
-setInterval(()=>{ renderTime(new Date()); }, 30000);
+setInterval(()=>{
+  renderTime(new Date());
+  if(cur==='schedule'){ const i=curBlkIdx(); if(i!==lastBlk){ lastBlk=i; renderView(); if(i>=0) toast('⏰ 进入：'+SCHEDULE[i].icon+' '+SCHEDULE[i].title); } }
+}, 20000);
 
 /* ---------- 启动 ---------- */
-load(); render();
+load(); render(); lastBlk=curBlkIdx();
 </script>
 </body>
 </html>
