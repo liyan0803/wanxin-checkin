@@ -198,6 +198,14 @@ textarea:focus{outline:2px solid var(--pinksoft)}
 .acts2 button:disabled{opacity:.45; pointer-events:none}
 .rtitle{font-size:15px;font-weight:800;margin-bottom:8px}
 .acts2 button .c{color:var(--gold);font-size:12px}
+.rtitle{font-size:15px;font-weight:800;margin-bottom:8px}
+.occrow{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.occl{font-size:14px;font-weight:800;flex:0 0 40px;color:var(--dim)}
+.occopts{display:flex;gap:8px;flex:1;flex-wrap:wrap}
+.occopts button{flex:1;min-width:132px;border:1px solid var(--line);background:var(--card2);color:var(--ink);border-radius:12px;padding:10px;font-size:13.5px;font-weight:800;cursor:pointer;min-height:46px;display:flex;flex-direction:column;gap:2px;align-items:center}
+.occopts button.on{background:var(--pink2);color:#fff;border-color:var(--pink2)}
+.occopts button .c{font-size:11.5px;color:var(--gold);font-weight:800}
+.occopts button.on .c{color:#fff}
 </style>
 </head>
 <body>
@@ -227,7 +235,7 @@ textarea:focus{outline:2px solid var(--pinksoft)}
 
       <div class="foot">
         数据只保存在这台设备的浏览器里，不会上传联网。
-        <div id="verLine" style="margin-top:6px">婉欣学习打卡 v6</div>
+        <div id="verLine" style="margin-top:6px">婉欣学习打卡 v7</div>
       </div>
     </div>
   </main>
@@ -243,6 +251,8 @@ const PTS_PER = 5;
 const BONUS_ALL = 10;
 const COST = {feed:5, play:10, acc:15};
 const CASH_PER = 10, GIFT_COST = 20, TV_PER = 5;
+const SLEEP_OPTS=[{key:'s930',label:'9:30 前睡觉',pts:20},{key:'s1000',label:'10:00 前睡觉',pts:10}];
+const WAKE_OPTS=[{key:'w7',label:'7 点起床（没哭闹）',pts:20},{key:'wcry',label:'起床哭闹（不加分）',pts:0}];
 const PET_NAME = '团子';
 const ACCESSORIES = ['🎀','🧣','👑','🌸'];
 const LEVELS = [
@@ -360,7 +370,7 @@ let state = null, cur = 'schedule', rfT=null, lastBlk=-2;
 function defState(){
   return { v:5, today:todayStr(),
     done:{}, awarded:{}, allBonus:false, allDoneAt:'', todayEarned:0, sound:true,
-    points:0, peak:0, gift:0, cash:0, tv:0,
+    points:0, peak:0, gift:0, cash:0, tv:0, sleep:null, wake:null,
     pet:{ happiness:0, acc:'' },
     log:[], history:{}, reflect:'' };
 }
@@ -377,6 +387,8 @@ function load(){
   if(typeof state.gift!=='number') state.gift=0;
   if(typeof state.cash!=='number') state.cash=0;
   if(typeof state.tv!=='number') state.tv=0;
+  if(state.sleep===undefined) state.sleep=null;
+  if(state.wake===undefined) state.wake=null;
   rollover(); save();
 }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
@@ -390,6 +402,7 @@ function rollover(){
     }
     state.today = t; state.done={}; state.awarded={};
     state.allBonus=false; state.allDoneAt=''; state.todayEarned=0; state.reflect='';
+    state.sleep=null; state.wake=null;
   }
 }
 
@@ -422,6 +435,28 @@ function toggleTask(id){
     if(n >= TOTAL && !state.allBonus){ state.allBonus=true; state.allDoneAt=nowHM(); earn(BONUS_ALL, '今日全部完成，额外 +'+BONUS_ALL); toast('🎉 全部完成！额外 +'+BONUS_ALL+' 分'); }
   }
   save(); render();
+}
+
+/* ---------- 作息奖励（早睡分档 / 早起飞闹） ---------- */
+function setOpt(kind, key){
+  const OPTS = kind==='sleep'?SLEEP_OPTS:WAKE_OPTS;
+  const cur = state[kind];
+  if(cur===key) key=null;
+  if(cur){ const o=OPTS.find(x=>x.key===cur); if(o&&o.pts){ deduct(o.pts, (kind==='sleep'?'取消早睡奖励':'取消早起奖励')+' -'+o.pts); } }
+  state[kind]=key;
+  if(key){ const o=OPTS.find(x=>x.key===key); if(o&&o.pts>0){ earn(o.pts, (kind==='sleep'?'早睡奖励：':'早起奖励：')+o.label+' +'+o.pts); playCoin();
+      toast((kind==='sleep'?'🌙 ':'🌅 ')+o.label+' +'+o.pts+' 分'); }
+    else { toast((kind==='sleep'?'🌙 ':'🌅 ')+o.label); } }
+  save(); render();
+}
+function setSleep(k){ setOpt('sleep',k); }
+function setWake(k){ setOpt('wake',k); }
+function renderOcc(){
+  const row=(label,kind,OPTS)=>'<div class="occrow"><div class="occl">'+label+'</div><div class="occopts">'
+    + OPTS.map(o=>'<button data-'+kind+'="'+o.key+'" class="'+(state[kind]===o.key?'on':'')+'">'+o.label+'<span class="c">'+(o.pts>0?('+'+o.pts+' 分'):'不加分')+'</span></button>').join('')+'</div></div>';
+  return '<div class="card"><div class="rtitle">😴 作息奖励</div>'
+    + row('早睡','sleep',SLEEP_OPTS) + row('早起','wake',WAKE_OPTS)
+    + '<div class="muted" style="margin-top:8px">9:30 前睡觉 +20 · 10:00 前睡觉 +10 · 7 点起床 +20 · 起床哭闹不加分。点一下记录，再点取消。</div></div>';
 }
 
 /* ---------- 等级 / 宠物 ---------- */
@@ -597,6 +632,7 @@ function renderGroup(g){
   g.tasks.forEach(tk=>h+=taskRow(tk));
   h+='</div><div class="pbar" style="margin-top:12px"><i style="width:'+pct+'%"></i></div>';
   h+='<div class="ptxt" style="margin-top:6px"><span>'+g.name+'进度 '+dn+'/'+g.tasks.length+'</span><span>'+pct+'%</span></div>';
+  if(g.key==='xisu') h += renderOcc();
   return h;
 }
 
@@ -757,6 +793,8 @@ document.addEventListener('click', e=>{
   const cash=e.target.closest('[data-cash]'); if(cash){ exchangeCash(+cash.dataset.cash); return; }
   const gift=e.target.closest('[data-gift]'); if(gift){ exchangeGift(); return; }
   const tv=e.target.closest('[data-tv]'); if(tv){ exchangeTV(+tv.dataset.tv); return; }
+  const sl=e.target.closest('[data-sleep]'); if(sl){ setSleep(sl.dataset.sleep); return; }
+  const wk=e.target.closest('[data-wake]'); if(wk){ setWake(wk.dataset.wake); return; }
   const act=e.target.closest('[data-act]');
   if(act){ const a=act.dataset.act;
     if(a==='export') exportData();
