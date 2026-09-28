@@ -195,6 +195,9 @@ textarea:focus{outline:2px solid var(--pinksoft)}
   body{font-size:20px}
   .inner{max-width:880px}
 }
+.acts2 button:disabled{opacity:.45; pointer-events:none}
+.rtitle{font-size:15px;font-weight:800;margin-bottom:8px}
+.acts2 button .c{color:var(--gold);font-size:12px}
 </style>
 </head>
 <body>
@@ -224,7 +227,7 @@ textarea:focus{outline:2px solid var(--pinksoft)}
 
       <div class="foot">
         数据只保存在这台设备的浏览器里，不会上传联网。
-        <div id="verLine" style="margin-top:6px">婉欣学习打卡 v5</div>
+        <div id="verLine" style="margin-top:6px">婉欣学习打卡 v6</div>
       </div>
     </div>
   </main>
@@ -239,6 +242,7 @@ const KEY = 'wxcheckin';
 const PTS_PER = 5;
 const BONUS_ALL = 10;
 const COST = {feed:5, play:10, acc:15};
+const CASH_PER = 10, GIFT_COST = 20, TV_PER = 5;
 const PET_NAME = '团子';
 const ACCESSORIES = ['🎀','🧣','👑','🌸'];
 const LEVELS = [
@@ -313,6 +317,7 @@ const RAIL = [
   {key:'yundong', icon:'🏃', label:'运动'},
   {key:'xisu', icon:'🪥', label:'习惯'},
   {key:'pet', icon:'🐱', label:'宠物'},
+  {key:'reward', icon:'🎁', label:'奖励'},
   {key:'log', icon:'🧾', label:'记录'},
   {key:'parent', icon:'👪', label:'家长'},
   {key:'setup', icon:'⚙️', label:'设置'}
@@ -355,7 +360,7 @@ let state = null, cur = 'schedule', rfT=null, lastBlk=-2;
 function defState(){
   return { v:5, today:todayStr(),
     done:{}, awarded:{}, allBonus:false, allDoneAt:'', todayEarned:0, sound:true,
-    points:0, peak:0,
+    points:0, peak:0, gift:0, cash:0, tv:0,
     pet:{ happiness:0, acc:'' },
     log:[], history:{}, reflect:'' };
 }
@@ -369,6 +374,9 @@ function load(){
   if(typeof state.peak!=='number') state.peak=state.points||0;
   if(typeof state.allDoneAt!=='string') state.allDoneAt='';
   if(typeof state.sound!=='boolean') state.sound=true;
+  if(typeof state.gift!=='number') state.gift=0;
+  if(typeof state.cash!=='number') state.cash=0;
+  if(typeof state.tv!=='number') state.tv=0;
   rollover(); save();
 }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
@@ -427,6 +435,15 @@ function petBuy(kind){
     const c = ACCESSORIES.indexOf(p.acc); p.acc = ACCESSORIES[(c+1)%ACCESSORIES.length]; toast('🎁 得到配饰 '+p.acc); }
   save(); render();
 }
+/* ---------- 奖励兑换 ---------- */
+function tvAllowed(){ const d=new Date(), wd=d.getDay(); if(wd===6) return true; if(wd===5 && d.getHours()>=18) return true; return false; }
+function exchangeCash(yuan){ const c=yuan*CASH_PER; if(state.points<c){ toast('可用积分不够（需要 '+c+'）'); return; }
+  state.points-=c; state.cash=(state.cash||0)+yuan; addLog('兑换现金 ¥'+yuan, -c); save(); render(); toast('💵 已兑换 ¥'+yuan); }
+function exchangeGift(){ if(state.points<GIFT_COST){ toast('可用积分不够（需要 '+GIFT_COST+'）'); return; }
+  state.points-=GIFT_COST; state.gift=(state.gift||0)+1; addLog('兑换礼物券 ×1', -GIFT_COST); save(); render(); toast('🎟️ 得到 1 张礼物券'); }
+function exchangeTV(mins){ if(!tvAllowed()){ toast('⛔ 电视兑换只在周五晚上和周六开放'); return; }
+  const c=mins*TV_PER; if(state.points<c){ toast('可用积分不够（需要 '+c+'）'); return; }
+  state.points-=c; state.tv=(state.tv||0)+mins; addLog('兑换电视 '+mins+' 分钟', -c); save(); render(); toast('📺 已兑换 '+mins+' 分钟电视'); }
 
 /* ---------- 语音朗读 ---------- */
 let curSpeakKey = null;
@@ -553,6 +570,7 @@ function renderView(){
   if(cur==='schedule') v.innerHTML = renderSchedule();
   else if(g) v.innerHTML = renderGroup(g);
   else if(cur==='pet') v.innerHTML = renderPet();
+  else if(cur==='reward') v.innerHTML = renderReward();
   else if(cur==='log') v.innerHTML = '<h2>🧾 积分变动记录</h2>'+renderLog()+'<h2>📒 历史打卡记录</h2>'+renderHist();
   else if(cur==='parent') v.innerHTML = '<h2>👪 家长查看 · 本周报告</h2>'+renderParent();
   else if(cur==='setup') v.innerHTML = renderSetup();
@@ -623,6 +641,25 @@ function renderSchedule(){
   return h;
 }
 
+function renderReward(){
+  const allowed=tvAllowed();
+  let h='<h2>🎁 奖励兑换</h2>';
+  h+='<div class="card"><div class="sum"><div class="b"><b>'+state.points+'</b><span>可用积分</span></div><div class="b"><b>¥'+(state.cash||0)+'</b><span>已换现金</span></div><div class="b"><b>'+(state.gift||0)+'</b><span>礼物券</span></div></div>'
+    +'<div class="sum"><div class="b"><b>'+(state.tv||0)+'</b><span>电视时间（分钟）</span></div></div>'
+    +'<div class="muted">'+CASH_PER+' 积分 = 1 元现金 · '+GIFT_COST+' 积分 = 1 张礼物券 · '+TV_PER+' 积分 = 1 分钟电视</div></div>';
+  h+='<div class="card"><div class="rtitle">💵 兑换现金</div><div class="acts2">'
+    +'<button data-cash="1">换 1 元<br><span class="c">'+CASH_PER+' 分</span></button>'
+    +'<button data-cash="5">换 5 元<br><span class="c">'+(CASH_PER*5)+' 分</span></button>'
+    +'<button data-cash="10">换 10 元<br><span class="c">'+(CASH_PER*10)+' 分</span></button></div></div>';
+  h+='<div class="card"><div class="rtitle">🎟️ 礼物券</div><div class="acts2">'
+    +'<button data-gift="1">换 1 张礼物券<br><span class="c">'+GIFT_COST+' 分</span></button></div>'
+    +'<div class="muted" style="margin-top:8px">已有礼物券：'+(state.gift||0)+' 张 · 已换现金：¥'+(state.cash||0)+'</div></div>';
+  h+='<div class="card"><div class="rtitle">📺 电视时间</div><div class="muted" style="margin-bottom:8px">'+TV_PER+' 积分 = 1 分钟 · '+(allowed?'✅ 现在可以兑换（周五晚上 / 周六）':'⛔ 只在周五晚上和周六开放')+'</div>'
+    +'<div class="acts2"><button data-tv="1" '+(allowed?'':'disabled')+'>换 1 分钟<br><span class="c">'+TV_PER+' 分</span></button>'
+    +'<button data-tv="10" '+(allowed?'':'disabled')+'>换 10 分钟<br><span class="c">'+(TV_PER*10)+' 分</span></button></div>'
+    +'<div class="muted" style="margin-top:8px">已兑换电视：'+(state.tv||0)+' 分钟</div></div>';
+  return h;
+}
 function renderPet(){
   const p=state.pet, L=levelOf(state.peak), N=nextLevel(state.peak);
   const acc = p.acc ? (' '+p.acc) : '';
@@ -717,6 +754,9 @@ document.addEventListener('click', e=>{
   const bt=e.target.closest('[data-blktm]'); if(bt){ startBlockTimer(+bt.dataset.blktm); return; }
   if(e.target.closest('[data-metro]')){ toggleMetro(); return; }
   const buy=e.target.closest('[data-buy]'); if(buy){ petBuy(buy.dataset.buy); return; }
+  const cash=e.target.closest('[data-cash]'); if(cash){ exchangeCash(+cash.dataset.cash); return; }
+  const gift=e.target.closest('[data-gift]'); if(gift){ exchangeGift(); return; }
+  const tv=e.target.closest('[data-tv]'); if(tv){ exchangeTV(+tv.dataset.tv); return; }
   const act=e.target.closest('[data-act]');
   if(act){ const a=act.dataset.act;
     if(a==='export') exportData();
